@@ -1,4 +1,4 @@
-Hello! I'm Lyagva and I "made" this pack! 
+Hello! I'm Lyagva and I 'made' this pack! 
 Well, actually I wasn't making all gradients. I just used gradients from "uiGradients" collection and then, through code, made "Eyedrop" styled gradient files.
 
 There are some folders:
