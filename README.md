@@ -13,6 +13,11 @@ Subfolders:
 - .\len16 - gradients with 16 colors 
 - .\len8 - gradients with 8 colors
 
+## How to download
+(For people who aren't familiar with git)
+1. On main page (https://github.com/Lyagva/LGP) click on green "Code" button
+2. Click Download as zip
+
 ## How to use
 How to use this pack:
 1. Open ableton and create midi track 
