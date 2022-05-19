@@ -7,7 +7,9 @@ Well, actually I wasn't making all gradients. I just used gradients from "uiGrad
 code, made "Eyedrop" styled gradient files.
 
 ## Files
-There are some folders:
+All gradient files are stored in .\gradients (sub-)folders
+
+Subfolders:
 - .\len16 - gradients with 16 colors 
 - .\len8 - gradients with 8 colors
 
