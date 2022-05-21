@@ -1,5 +1,7 @@
 import json
 import numpy as np
+import os
+from colorsys import rgb_to_hsv
 
 # Export gradient
 def saveToFile(velocities, filename="exports/output"):
@@ -33,7 +35,7 @@ def getGradient(colors, samples=8):
 	for i in range(times):
 		col1 = np.array(colors[i])
 		col2 = np.array(colors[i + 1])
-		colD = (col2 - col1) / (samples // times)
+		colD = (col2 - col1) / ((samples - 1) // times)
 
 		for num in range(samples // times):
 			gradient.append(list(col1 + colD * num))
@@ -50,10 +52,8 @@ def get_palette(filename="palette"):
 				replace(";", "").replace(" ", ", ").replace("\n", "") + ")")
 	return palette
 
-# get closets color to given
-def closest_color(rgb, palette=None):
-	if palette is None:
-		palette = get_palette()
+# get closets color to given using rgb distance
+def closest_color(rgb, palette):
 
 	if len(rgb) == 3:
 		r, g, b = rgb
@@ -69,11 +69,35 @@ def closest_color(rgb, palette=None):
 	color = min(color_diffs)[1]
 	return color, list(palette.keys())[list(palette.values()).index(color)]
 
+# get closets color to given using hsv distance
+def closest_color_hsv(rgb, palette):
+	if len(rgb) == 3:
+		r, g, b = rgb
+	else:
+		r, g, b, a = rgb
 
-length = 8 # Length of every gradient
-path = "len8/" # Relative folder to store files at. Must be pre-created first
-full = True
-if full:
+	h, s, v = rgb_to_hsv(r / 255, g / 255, b / 255)
+
+	color_diffs = []
+	for color in palette.values():
+		cr, cg, cb = color
+		ch, cs, cv = rgb_to_hsv(cr / 255, cg / 255, cb / 255)
+
+		color_diff = ((h - ch)**2 * 0.475 + (s - cs)**2 * 0.2875 + (v - cv)**2 * 0.2375)**0.5
+		color_diffs.append((color_diff, color))
+
+	color = min(color_diffs)[1]
+	return color, list(palette.keys())[list(palette.values()).index(color)]
+
+palette = get_palette("palette")
+for l in range(2, 17):
+	length = l # Length of every gradient
+	path = f"gradients/len{l}/" # Relative folder to store files at.
+
+	if not os.path.exists(path):
+		# Create a new directory because it does not exist
+		os.makedirs(path)
+
 	# Go through all gradients in json
 	for item in readJson():
 		name, colors = item["name"], item["colors"]
@@ -86,7 +110,7 @@ if full:
 
 		# Get velocities for all colors ([0] - rgb color, [1] - velocity)
 		for col in gradient:
-			velocities.append(closest_color(col)[1])
+			velocities.append(closest_color_hsv(col, palette)[1])
 
 		# Save velocity scheme to file
 		saveToFile(velocities, path + name.lower())
